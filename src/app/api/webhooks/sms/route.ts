@@ -7,6 +7,8 @@ import { generateAiReply } from "@/lib/ai";
 import { createBooking } from "@/lib/bookings";
 import { getServicesCollection } from "@/lib/services";
 import { sendSms } from "@/lib/twilio";
+import { listAdminEmails } from "@/lib/admins";
+import { sendEmail } from "@/lib/email";
 
 function twiml(xml = "") {
   return new NextResponse(`<?xml version="1.0" encoding="UTF-8"?><Response>${xml}</Response>`, {
@@ -78,6 +80,25 @@ export async function POST(request: Request) {
             start: null,
             notes: `Preferência do cliente: ${preferredDate}. ${notes}`.trim(),
           });
+
+          try {
+            const adminEmails = await listAdminEmails();
+            await Promise.all(
+              adminEmails.map((email) =>
+                sendEmail({
+                  to: email,
+                  subject: `Novo pedido de agendamento — ${serviceName}`,
+                  html: `<p>Um cliente pediu <strong>${serviceName}</strong> por SMS.</p>
+<p><strong>Cliente:</strong> ${customer.name || customer.phone}</p>
+<p><strong>Preferência de data:</strong> ${preferredDate}</p>
+<p><strong>Notas:</strong> ${notes || "—"}</p>
+<p>Confirme em /admin/bookings.</p>`,
+                })
+              )
+            );
+          } catch (error) {
+            console.error("Falha ao enviar e-mail de novo pedido:", error);
+          }
         }
       );
 

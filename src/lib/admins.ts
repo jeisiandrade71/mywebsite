@@ -17,3 +17,9 @@ export async function findAdminByEmail(email: string) {
   const admins = await getAdminsCollection();
   return admins.findOne({ email: email.toLowerCase() });
 }
+
+export async function listAdminEmails() {
+  const admins = await getAdminsCollection();
+  const docs = await admins.find().toArray();
+  return docs.map((a) => a.email);
+}
