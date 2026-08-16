@@ -13,3 +13,11 @@ if (!accountSid || !apiKeySid || !apiKeySecret) {
 const twilioClient = Twilio(apiKeySid, apiKeySecret, { accountSid });
 
 export default twilioClient;
+
+export async function sendSms(to: string, body: string) {
+  const from = process.env.TWILIO_SMS_NUMBER;
+  if (!from) {
+    throw new Error("Missing TWILIO_SMS_NUMBER environment variable");
+  }
+  return twilioClient.messages.create({ from, to, body });
+}
