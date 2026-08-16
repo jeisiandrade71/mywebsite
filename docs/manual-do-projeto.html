@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual do J&A Cleaning</title>
+<style>
+  :root {
+    --ground: #eef3f2;
+    --surface: #ffffff;
+    --surface-2: #e4ecea;
+    --ink: #0d2b2a;
+    --ink-soft: #4a625f;
+    --ink-faint: #7d918e;
+    --line: #cfdcd9;
+    --accent: #0a7d78;
+    --accent-soft: #d7ecea;
+    --indigo: #3b4fb8;
+    --indigo-soft: #e0e4f7;
+    --amber: #9a5f12;
+    --amber-soft: #f6eada;
+    --shadow: 0 1px 2px rgba(13, 43, 42, .06), 0 8px 24px rgba(13, 43, 42, .05);
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0a1615;
+      --surface: #11201f;
+      --surface-2: #172c2a;
+      --ink: #e7f0ee;
+      --ink-soft: #a3b8b5;
+      --ink-faint: #75908c;
+      --line: #24403d;
+      --accent: #4cc3ba;
+      --accent-soft: #12312f;
+      --indigo: #93a2ee;
+      --indigo-soft: #1a2144;
+      --amber: #d9a45f;
+      --amber-soft: #2e2415;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0a1615;
+    --surface: #11201f;
+    --surface-2: #172c2a;
+    --ink: #e7f0ee;
+    --ink-soft: #a3b8b5;
+    --ink-faint: #75908c;
+    --line: #24403d;
+    --accent: #4cc3ba;
+    --accent-soft: #12312f;
+    --indigo: #93a2ee;
+    --indigo-soft: #1a2144;
+    --amber: #d9a45f;
+    --amber-soft: #2e2415;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+  }
+
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  /* ---------- Capa ---------- */
+  .cover {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .cover h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .cover .lede {
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .cover-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
+  }
+
+  /* ---------- Layout de duas colunas ---------- */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+    margin-top: 56px;
+  }
+  @media (max-width: 900px) {
+    .body-grid { grid-template-columns: 1fr; gap: 32px; }
+    nav.toc { position: static; }
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 28px;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  nav.toc p {
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 14px;
+    font-weight: 600;
+  }
+  nav.toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    counter-reset: toc;
+  }
+  nav.toc a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: flex;
+    gap: 9px;
+    border-left: 2px solid transparent;
+    padding-left: 10px;
+    margin-left: -12px;
+  }
+  nav.toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+  nav.toc a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  nav.toc li { counter-increment: toc; }
+  nav.toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    padding-top: 2px;
+  }
+
+  main { min-width: 0; max-width: 72ch; }
+
+  section { padding-top: 8px; margin-bottom: 68px; scroll-margin-top: 24px; }
+
+  h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.7rem, 3.4vw, 2.2rem);
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    margin: 0 0 8px;
+    text-wrap: balance;
+  }
+  .num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: .1em;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  h3 {
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -.005em;
+    margin: 34px 0 6px;
+  }
+  h4 {
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--ink-faint);
+    font-weight: 700;
+    margin: 26px 0 8px;
+  }
+  p { margin: 0 0 16px; }
+  main ul, main ol { margin: 0 0 18px; padding-left: 22px; }
+  main li { margin-bottom: 7px; }
+  strong { font-weight: 650; }
+  a { color: var(--accent); }
+
+  code {
+    font-family: var(--mono);
+    font-size: .855em;
+    background: var(--surface-2);
+    padding: 2px 5px;
+    border-radius: 4px;
+    color: var(--ink);
+  }
+
+  .sub {
+    color: var(--ink-soft);
+    font-size: 1.02rem;
+    margin-bottom: 26px;
+    max-width: 60ch;
+  }
+
+  /* ---------- Blocos ---------- */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    margin: 0 0 20px;
+  }
+  .card > :last-child { margin-bottom: 0; }
+
+  .note {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 18px;
+    margin: 0 0 22px;
+    font-size: .95rem;
+  }
+  .note > :last-child { margin-bottom: 0; }
+  .note .tag {
+    display: block;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 5px;
+  }
+  .note.warn { border-left-color: var(--amber); background: var(--amber-soft); }
+  .note.warn .tag { color: var(--amber); }
+  .note.analogy { border-left-color: var(--indigo); background: var(--indigo-soft); }
+  .note.analogy .tag { color: var(--indigo); }
+
+  .table-wrap { overflow-x: auto; margin: 0 0 22px; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 480px;
+    font-size: .92rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  td code { white-space: nowrap; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 0 0 22px;
+    color: var(--ink-soft);
+    box-shadow: var(--shadow);
+  }
+  pre b { color: var(--ink); font-weight: 600; }
+  pre i { color: var(--ink-faint); font-style: normal; }
+  pre .c { color: var(--accent); }
+
+  /* ---------- Fluxo em passos ---------- */
+  .flow {
+    list-style: none;
+    counter-reset: flow;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .flow li {
+    counter-increment: flow;
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 16px;
+    padding: 0 0 20px;
+    margin: 0;
+    position: relative;
+  }
+  .flow li::before {
+    content: counter(flow);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--ground);
+    z-index: 1;
+  }
+  .flow li::after {
+    content: "";
+    position: absolute;
+    left: 13px;
+    top: 26px;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+  }
+  .flow li:last-child { padding-bottom: 0; }
+  .flow li:last-child::after { display: none; }
+  .flow .who {
+    display: block;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .flow .what { font-size: .95rem; }
+  .flow .what code { font-size: .82em; }
+
+  /* ---------- Glossário ---------- */
+  dl.gloss { margin: 0; display: grid; gap: 0; }
+  dl.gloss div {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 620px) {
+    dl.gloss div { grid-template-columns: 1fr; gap: 3px; }
+  }
+  dl.gloss dt { font-weight: 650; font-size: .95rem; }
+  dl.gloss dd { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+
+  .status {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid var(--line);
+  }
+  .status.todo { background: var(--amber-soft); color: var(--amber); }
+
+  hr.rule {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 0 0 30px;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-top: 26px;
+    margin-top: 20px;
+    color: var(--ink-faint);
+    font-size: .9rem;
+  }
+
+  svg { max-width: 100%; height: auto; display: block; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="cover">
+    <span class="eyebrow">Manual do projeto · escrito do zero</span>
+    <h1>J&amp;A Cleaning Group,<br>peça por peça</h1>
+    <p class="lede">
+      Tudo o que existe dentro da pasta <code>mysite</code>: o que cada arquivo faz,
+      por que ele existe, e como as partes conversam entre si. Escrito para quem
+      nunca programou — sem pular etapas e sem assumir que você já sabe alguma coisa.
+    </p>
+    <div class="cover-meta">
+      <span class="chip">Next.js 16</span>
+      <span class="chip">React 19</span>
+      <span class="chip">TypeScript</span>
+      <span class="chip">Tailwind CSS 4</span>
+      <span class="chip">MongoDB Atlas</span>
+      <span class="chip">Twilio SMS</span>
+      <span class="chip">Claude (Anthropic)</span>
+      <span class="chip">Vercel</span>
+    </div>
+  </header>
+
+  <div class="body-grid">
+
+    <nav class="toc" aria-label="Sumário">
+      <p>Sumário</p>
+      <ol>
+        <li><a href="#s1">O que este site faz</a></li>
+        <li><a href="#s2">Como um site funciona</a></li>
+        <li><a href="#s3">As ferramentas</a></li>
+        <li><a href="#s4">Mapa das pastas</a></li>
+        <li><a href="#s5">Como nasce uma página</a></li>
+        <li><a href="#s6">Servidor e navegador</a></li>
+        <li><a href="#s7">Formulários que salvam</a></li>
+        <li><a href="#s8">O banco de dados</a></li>
+        <li><a href="#s9">Login e permissões</a></li>
+        <li><a href="#s10">O robô que responde SMS</a></li>
+        <li><a href="#s11">Senhas e segredos</a></li>
+        <li><a href="#s12">Rodar e publicar</a></li>
+        <li><a href="#s13">O que falta fazer</a></li>
+        <li><a href="#s14">Glossário</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <!-- 1 -->
+      <section id="s1">
+        <span class="num">Capítulo 01</span>
+        <h2>O que este site faz</h2>
+        <p class="sub">Antes de qualquer código: qual é o problema que este projeto resolve.</p>
+
+        <p>
+          O <strong>J&amp;A Cleaning Group</strong> é uma empresa de limpeza residencial que
+          atende a Space Coast (Brevard County) e a Treasure Coast (Vero Beach).
+          Este projeto é o sistema completo dessa empresa. Ele tem <strong>três públicos</strong>,
+          e cada um enxerga uma parte diferente:
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Quem</th><th>Onde entra</th><th>O que consegue fazer</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Cliente</strong></td>
+                <td><code>/</code> — página pública</td>
+                <td>Ver os serviços e preços, escolher o idioma (inglês, português ou espanhol), e mandar SMS ou ligar para a empresa.</td>
+              </tr>
+              <tr>
+                <td><strong>Você (administradora)</strong></td>
+                <td><code>/admin</code> — área com senha</td>
+                <td>Cadastrar serviços, ler as conversas de SMS, confirmar agendamentos, gerenciar a equipe e ajustar as instruções da assistente virtual.</td>
+              </tr>
+              <tr>
+                <td><strong>Equipe</strong></td>
+                <td><code>/team</code> — área com senha</td>
+                <td>Entrar com a própria conta. As funcionalidades da equipe ainda estão em construção.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          A parte mais incomum do sistema: quando um cliente manda SMS para o número
+          da empresa, <strong>uma assistente de inteligência artificial responde sozinha</strong> —
+          ela sabe os preços, os horários, e se o cliente quiser marcar um serviço, ela
+          cria um pedido pendente na sua agenda para você confirmar depois.
+          O capítulo 10 explica esse fluxo inteiro.
+        </p>
+      </section>
+
+      <!-- 2 -->
+      <section id="s2">
+        <span class="num">Capítulo 02</span>
+        <h2>Como um site funciona, de verdade</h2>
+        <p class="sub">O conceito que precisa vir antes de todos os outros: cliente, servidor e banco.</p>
+
+        <p>
+          Quando alguém digita um endereço no navegador, três computadores diferentes
+          entram em ação. Entender essa divisão explica <em>quase todas</em> as decisões
+          deste projeto.
+        </p>
+
+        <ul class="flow">
+          <li>
+            <div>
+              <span class="who">O navegador — o computador do visitante</span>
+              <span class="what">Chrome, Safari, o celular da pessoa. Ele não tem nenhum dado da empresa. Ele só sabe pedir páginas e mostrar o que chega. Também é onde cliques, digitação e animações acontecem.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">O servidor — um computador da Vercel</span>
+              <span class="what">Fica ligado 24 horas por dia na internet. Quando um pedido chega, ele monta a página, consulta o que precisar, e devolve o resultado pronto. É <strong>aqui</strong> que o seu código roda de verdade.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">O banco de dados — o MongoDB Atlas</span>
+              <span class="what">Outro computador, em outro lugar, cuja única função é <strong>guardar informação de forma permanente</strong>. Serviços, clientes, mensagens, agendamentos. Se o servidor desligar e ligar, o banco continua com tudo.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="note analogy">
+          <span class="tag">Analogia</span>
+          <p>
+            Pense num restaurante. O <strong>navegador</strong> é o cliente sentado à mesa —
+            ele só vê o prato. O <strong>servidor</strong> é a cozinha: recebe o pedido,
+            prepara e entrega. O <strong>banco de dados</strong> é a despensa: nada é cozinhado
+            lá, mas sem ela a cozinha não faz nada. O cliente nunca entra na despensa —
+            e é por isso que a senha do banco nunca pode chegar ao navegador.
+          </p>
+        </div>
+
+        <p>
+          Este projeto usa o Next.js, que é um <em>framework</em>: uma caixa de ferramentas
+          que cuida da parte chata dessa conversa (rotas, envio, cache) para você escrever
+          só o que é específico da sua empresa.
+        </p>
+      </section>
+
+      <!-- 3 -->
+      <section id="s3">
+        <span class="num">Capítulo 03</span>
+        <h2>As ferramentas da caixa</h2>
+        <p class="sub">Cada nome que aparece no projeto, traduzido para português comum.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Nome</th><th>O que é</th><th>Onde você vê isso aqui</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Node.js</strong></td>
+                <td>O programa que faz o computador entender e executar JavaScript fora do navegador. Sem ele, nada roda.</td>
+                <td>É o que o comando <code>npm run dev</code> liga. Este projeto exige a versão 20 ou maior.</td>
+              </tr>
+              <tr>
+                <td><strong>npm</strong></td>
+                <td>O "app store" de código. Baixa e instala bibliotecas prontas escritas por outras pessoas.</td>
+                <td>A pasta gigante <code>node_modules/</code> e a lista em <code>package.json</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>React</strong></td>
+                <td>A biblioteca que monta a tela em pedacinhos reutilizáveis chamados <em>componentes</em>.</td>
+                <td>Todo arquivo <code>.tsx</code> deste projeto.</td>
+              </tr>
+              <tr>
+                <td><strong>Next.js</strong></td>
+                <td>Organiza o React num site completo: rotas, servidor, páginas, otimização.</td>
+                <td>A estrutura inteira de <code>src/app/</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>TypeScript</strong></td>
+                <td>JavaScript com etiquetas de tipo. Você declara "isto é um texto", "isto é um número" e o computador avisa quando algo não bate — antes de o site quebrar.</td>
+                <td>A extensão <code>.ts</code> / <code>.tsx</code> e os blocos <code>interface</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Tailwind CSS</strong></td>
+                <td>Um jeito de deixar a tela bonita escrevendo o estilo direto no elemento, em pedacinhos curtos.</td>
+                <td>Aquelas listas tipo <code>class="flex flex-col gap-2 text-sm"</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>MongoDB Atlas</strong></td>
+                <td>O banco de dados, hospedado na nuvem. Guarda informação em "documentos" parecidos com fichas.</td>
+                <td>Todos os arquivos em <code>src/lib/</code> que salvam ou leem dados.</td>
+              </tr>
+              <tr>
+                <td><strong>Auth.js</strong></td>
+                <td>A biblioteca que cuida de login, senha e de manter a pessoa conectada.</td>
+                <td><code>src/auth.ts</code> e as páginas de login.</td>
+              </tr>
+              <tr>
+                <td><strong>Twilio</strong></td>
+                <td>Empresa que aluga números de telefone e envia/recebe SMS por código.</td>
+                <td><code>src/lib/twilio.ts</code> e o número <code>+1 (321) 252-5141</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Anthropic / Claude</strong></td>
+                <td>A inteligência artificial que escreve as respostas dos SMS.</td>
+                <td><code>src/lib/ai.ts</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Vercel</strong></td>
+                <td>Empresa que hospeda o site — ou seja, mantém aquele servidor ligado na internet.</td>
+                <td>A pasta <code>.vercel/</code> e o comando <code>vercel</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Git / GitHub</strong></td>
+                <td>O histórico do projeto. Cada mudança vira um "commit" — uma foto do projeto naquele momento, que você pode revisitar.</td>
+                <td>A pasta escondida <code>.git/</code>. O histórico mostra as fases 4, 5, 6 e 7 do seu plano.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section id="s4">
+        <span class="num">Capítulo 04</span>
+        <h2>Mapa das pastas</h2>
+        <p class="sub">O projeto inteiro em uma tela, com um comentário em cada linha.</p>
+
+        <pre><b>mysite/</b>
+├─ <b>src/</b>                       <i>todo o código que você escreveu</i>
+│  ├─ <b>app/</b>                    <span class="c">as páginas — cada pasta vira um endereço</span>
+│  │  ├─ page.tsx              <i>a página pública (endereço: / )</i>
+│  │  ├─ layout.tsx            <i>a moldura de TODAS as páginas</i>
+│  │  ├─ globals.css           <i>estilos que valem para o site todo</i>
+│  │  ├─ <b>admin/</b>               <i>sua área administrativa (/admin)</i>
+│  │  │  ├─ layout.tsx         <i>o menu superior e o botão "Sair"</i>
+│  │  │  ├─ page.tsx           <i>o painel inicial</i>
+│  │  │  ├─ login/             <i>tela de entrar</i>
+│  │  │  ├─ services/          <i>cadastro de serviços e preços</i>
+│  │  │  ├─ conversations/     <i>as conversas de SMS</i>
+│  │  │  ├─ bookings/          <i>a agenda</i>
+│  │  │  ├─ team/              <i>contas da equipe</i>
+│  │  │  └─ settings/          <i>nome, horário e instruções da IA</i>
+│  │  ├─ <b>team/</b>                <i>área da equipe (/team)</i>
+│  │  └─ <b>api/</b>                 <span class="c">endereços que devolvem dados, não telas</span>
+│  │     ├─ auth/…             <i>login por baixo dos panos</i>
+│  │     ├─ ping-db/           <i>testa se o banco responde</i>
+│  │     ├─ ping-twilio/       <i>testa se o Twilio responde</i>
+│  │     └─ webhooks/sms/      <span class="c">← onde o SMS do cliente chega</span>
+│  ├─ <b>components/</b>             <i>pedaços de tela reaproveitáveis</i>
+│  │  ├─ LandingContent.tsx    <i>o conteúdo da página pública</i>
+│  │  └─ Logo.tsx              <i>o logotipo</i>
+│  ├─ <b>lib/</b>                    <span class="c">a "cozinha": tudo que fala com banco e serviços</span>
+│  │  ├─ mongodb.ts            <i>abre a conexão com o banco</i>
+│  │  ├─ services.ts           <i>salvar / ler serviços</i>
+│  │  ├─ customers.ts          <i>salvar / ler clientes</i>
+│  │  ├─ conversations.ts      <i>as conversas</i>
+│  │  ├─ messages.ts           <i>as mensagens de cada conversa</i>
+│  │  ├─ bookings.ts           <i>os agendamentos</i>
+│  │  ├─ teamMembers.ts        <i>as contas da equipe</i>
+│  │  ├─ admins.ts             <i>a sua conta de administradora</i>
+│  │  ├─ businessSettings.ts   <i>as configurações do negócio</i>
+│  │  ├─ twilio.ts             <i>enviar SMS</i>
+│  │  ├─ ai.ts                 <i>pedir a resposta para o Claude</i>
+│  │  └─ landingTranslations.ts <i>os textos em EN / PT / ES</i>
+│  ├─ auth.ts                  <i>as regras de login</i>
+│  └─ proxy.ts                 <span class="c">o porteiro: barra quem não pode entrar</span>
+├─ <b>scripts/</b>
+│  └─ create-admin.ts          <i>cria sua conta de administradora</i>
+├─ <b>public/</b>                    <i>imagens e ícones servidos como estão</i>
+├─ <b>node_modules/</b>              <i>bibliotecas baixadas — nunca se mexe aqui</i>
+├─ .env.local                  <span class="c">SENHAS E CHAVES — nunca vai para o GitHub</span>
+├─ .gitignore                  <i>a lista do que o Git deve ignorar</i>
+├─ package.json                <i>nome dos comandos e lista de bibliotecas</i>
+├─ CLAUDE.md / AGENTS.md       <i>instruções para o assistente de IA (eu)</i>
+└─ next.config.ts              <i>ajustes do Next.js</i></pre>
+
+        <div class="note">
+          <span class="tag">Regra prática</span>
+          <p>
+            Você só edita coisas dentro de <code>src/</code> e <code>scripts/</code>.
+            <code>node_modules/</code>, <code>.next/</code> e <code>package-lock.json</code>
+            são gerados automaticamente — mexer neles não adianta, porque eles são
+            reescritos sozinhos.
+          </p>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section id="s5">
+        <span class="num">Capítulo 05</span>
+        <h2>Como nasce uma página</h2>
+        <p class="sub">A regra mais importante do Next.js: as pastas <em>são</em> os endereços.</p>
+
+        <p>
+          Você não escreve em lugar nenhum "o endereço /admin/services existe".
+          Basta criar a pasta <code>src/app/admin/services/</code> com um arquivo
+          <code>page.tsx</code> dentro — e o endereço passa a existir. É literalmente isso.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Arquivo na pasta</th><th>Vira o quê</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>page.tsx</code></td><td>A tela que a pessoa vê naquele endereço.</td></tr>
+              <tr><td><code>layout.tsx</code></td><td>Uma moldura em volta: cabeçalho, menu, rodapé. Vale para a pasta e para todas as pastas dentro dela.</td></tr>
+              <tr><td><code>route.ts</code></td><td>Um endereço que devolve <em>dados</em> em vez de tela. É como outros programas conversam com o seu site.</td></tr>
+              <tr><td><code>actions.ts</code></td><td>As funções que <em>salvam</em> coisas (capítulo 07).</td></tr>
+              <tr><td><code>[id]</code> (com colchetes)</td><td>Uma parte variável do endereço. <code>conversations/[id]</code> atende <code>/admin/conversations/qualquer-coisa</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>As molduras se empilham</h3>
+        <p>
+          Quando você abre <code>/admin/bookings</code>, o Next.js monta três coisas, uma
+          dentro da outra:
+        </p>
+        <pre><b>src/app/layout.tsx</b>            <i>fontes, idioma, o &lt;body&gt; da página</i>
+   └─ <b>src/app/admin/layout.tsx</b>   <i>o menu Dashboard · Serviços · Conversas… e o "Sair"</i>
+         └─ <b>src/app/admin/bookings/page.tsx</b>   <i>a agenda em si</i></pre>
+        <p>
+          É por isso que o menu do admin aparece em todas as telas administrativas sem
+          você repetir o código em cada uma. Você escreveu uma vez, em
+          <code>src/app/admin/layout.tsx</code>.
+        </p>
+
+        <h3>Um componente é uma função que devolve tela</h3>
+        <p>
+          Abra <code>src/app/admin/page.tsx</code>. São 13 linhas. Uma função com um nome,
+          e dentro dela algo que parece HTML. Esse "HTML dentro do código" chama-se
+          <strong>JSX</strong>, e é assim que o React descreve telas. Trechos entre
+          chaves <code>{ }</code> são código de verdade sendo executado no meio da tela —
+          por exemplo <code>{session?.user?.name}</code> coloca o nome de quem está logado ali.
+        </p>
+      </section>
+
+      <!-- 6 -->
+      <section id="s6">
+        <span class="num">Capítulo 06</span>
+        <h2>Servidor e navegador: quem roda o quê</h2>
+        <p class="sub">A distinção que mais confunde no começo — e que aparece o tempo todo neste projeto.</p>
+
+        <p>
+          Por padrão, no Next.js moderno, <strong>todo componente roda no servidor</strong>.
+          Isso é ótimo: ele pode conversar direto com o banco de dados, e o visitante
+          recebe só o resultado pronto, sem nunca ver a senha do banco.
+        </p>
+
+        <pre><i>src/app/page.tsx — roda no servidor</i>
+export default async function Home() {
+  const services = <b>await listActiveServices()</b>;   <span class="c">← consulta o MongoDB direto</span>
+  …
+}</pre>
+
+        <p>
+          Mas algumas coisas <em>só</em> funcionam no navegador: reagir a um clique,
+          lembrar o idioma escolhido, animar algo. Para isso, o arquivo começa com a
+          linha mágica <code>"use client"</code>.
+        </p>
+
+        <pre><i>src/components/LandingContent.tsx — roda no navegador</i>
+<b>"use client";</b>
+
+const [lang, setLang] = useState("en");   <span class="c">← lembra o idioma escolhido</span></pre>
+
+        <div class="note analogy">
+          <span class="tag">Analogia</span>
+          <p>
+            A cozinha (servidor) prepara o prato. O <code>"use client"</code> é o
+            saleiro que vai <em>junto</em> para a mesa, porque só o cliente sabe
+            quanto sal ele quer. Você manda para a mesa o mínimo necessário —
+            e nunca manda a despensa inteira.
+          </p>
+        </div>
+
+        <p>
+          É exatamente esse o desenho da sua página inicial: <code>page.tsx</code> roda
+          no servidor e busca os serviços no banco; depois entrega essa lista pronta
+          para <code>LandingContent.tsx</code>, que roda no navegador e cuida do botão
+          de trocar idioma. Cada um faz o que só ele consegue fazer.
+        </p>
+
+        <h3>A linha <code>export const revalidate = 60</code></h3>
+        <p>
+          Está no topo de <code>src/app/page.tsx</code> e quer dizer: <em>"guarde a página
+          pronta e reaproveite por 60 segundos"</em>. Sem isso, cada visitante faria uma
+          consulta nova ao banco. Com isso, o site fica mais rápido e mais barato — em
+          troca, uma mudança de preço pode levar até um minuto para aparecer no site público.
+        </p>
+      </section>
+
+      <!-- 7 -->
+      <section id="s7">
+        <span class="num">Capítulo 07</span>
+        <h2>Formulários que salvam de verdade</h2>
+        <p class="sub">Os arquivos <code>actions.ts</code>, e o que significa <code>"use server"</code>.</p>
+
+        <p>
+          Um formulário na tela precisa, no fim, gravar algo no banco. Mas o formulário
+          está no navegador e o banco só pode ser tocado pelo servidor. A ponte entre os
+          dois são as <strong>Server Actions</strong> — funções que vivem no servidor e que
+          o formulário pode chamar diretamente.
+        </p>
+
+        <p>Veja <code>src/app/admin/services/actions.ts</code>. Toda ação segue quatro passos, sempre nesta ordem:</p>
+
+        <ul class="flow">
+          <li>
+            <div>
+              <span class="who">Conferir quem está pedindo</span>
+              <span class="what"><code>requireSession()</code> — se não tem ninguém logado, para tudo. Nunca confie que o botão só apareceu para quem podia clicar.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Validar o que chegou</span>
+              <span class="what"><code>parseServiceForm()</code> — nome não pode estar vazio, preço não pode ser negativo, duração precisa ser um número inteiro de minutos.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Gravar no banco</span>
+              <span class="what"><code>createService()</code> — a função de <code>src/lib/services.ts</code> que fala com o MongoDB.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Atualizar a tela</span>
+              <span class="what"><code>revalidatePath("/admin/services")</code> — avisa o Next.js que aquela página mudou e precisa ser montada de novo. Sem essa linha, você salvaria e a tela continuaria mostrando o valor antigo.</span>
+            </div>
+          </li>
+        </ul>
+
+        <h3>Preços em centavos</h3>
+        <p>
+          Repare que o banco guarda <code>priceCents</code>, não <code>price</code>.
+          Um serviço de US$ 120,00 é gravado como <code>12000</code>. Isso é padrão em
+          qualquer sistema que lida com dinheiro: números com vírgula têm erros
+          minúsculos de arredondamento no computador, e um centavo perdido por
+          transação vira um problema real. Guarda-se o inteiro e divide-se por 100
+          só na hora de mostrar — é o que a função <code>formatPrice</code> faz.
+        </p>
+      </section>
+
+      <!-- 8 -->
+      <section id="s8">
+        <span class="num">Capítulo 08</span>
+        <h2>O banco de dados por dentro</h2>
+        <p class="sub">Oito gavetas, e o que cada uma guarda.</p>
+
+        <p>
+          O MongoDB organiza a informação em <strong>coleções</strong> (pense em gavetas de
+          um arquivo) cheias de <strong>documentos</strong> (as fichas dentro da gaveta).
+          Toda ficha ganha automaticamente um <code>_id</code>: um código único,
+          o "RG" daquele registro.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Coleção</th><th>Guarda</th><th>Campos principais</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>services</code></td><td>Os serviços oferecidos</td><td>nome, descrição, <code>priceCents</code>, duração, <code>active</code></td></tr>
+              <tr><td><code>customers</code></td><td>Os clientes</td><td>telefone (é ele que identifica a pessoa)</td></tr>
+              <tr><td><code>conversations</code></td><td>Uma linha de conversa por cliente</td><td><code>customerId</code>, canal, <code>aiEnabled</code>, status</td></tr>
+              <tr><td><code>messages</code></td><td>Cada mensagem trocada</td><td><code>conversationId</code>, direção (entrou/saiu), quem enviou, texto</td></tr>
+              <tr><td><code>bookings</code></td><td>Os agendamentos</td><td><code>customerId</code>, serviço, data, <code>status</code>, observações</td></tr>
+              <tr><td><code>teamMembers</code></td><td>As contas da equipe</td><td>email, senha embaralhada, cargo, <code>active</code></td></tr>
+              <tr><td><code>admins</code></td><td>A sua conta</td><td>email, senha embaralhada</td></tr>
+              <tr><td><code>businessSettings</code></td><td>Uma única ficha com os ajustes gerais</td><td>nome da empresa, horários, instruções da IA</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Como as gavetas se conectam</h3>
+        <p>
+          Nenhuma ficha copia os dados da outra. Uma mensagem não guarda o telefone do
+          cliente — ela guarda o <code>_id</code> da conversa, que guarda o <code>_id</code>
+          do cliente, que guarda o telefone. Assim, se o telefone mudar, muda num lugar só.
+        </p>
+        <pre>customers  <span class="c">──_id──▶</span>  conversations  <span class="c">──_id──▶</span>  messages
+    │
+    <span class="c">└──_id──▶</span>  bookings  <span class="c">◀──_id──</span>  services</pre>
+
+        <h3>Todo arquivo de <code>lib/</code> tem a mesma forma</h3>
+        <p>Abra qualquer um — <code>bookings.ts</code>, <code>services.ts</code>, <code>teamMembers.ts</code> — e você vai encontrar sempre o mesmo desenho:</p>
+        <ul>
+          <li>uma <code>interface</code> descrevendo o formato da ficha;</li>
+          <li>uma função <code>get…Collection()</code> que abre a gaveta certa;</li>
+          <li>funções de <em>ler</em> (<code>list…</code>, <code>find…</code>);</li>
+          <li>funções de <em>escrever</em> (<code>create…</code>, <code>update…</code>, <code>delete…</code>, <code>set…</code>).</li>
+        </ul>
+        <p>
+          Aprender a ler <em>um</em> desses arquivos é aprender a ler todos os nove.
+        </p>
+
+        <h3>Por que <code>mongodb.ts</code> é tão estranho</h3>
+        <p>
+          Abrir uma conexão com o banco é lento. Aquele bloco com
+          <code>global._mongoClientPromise</code> existe para abrir a conexão
+          <strong>uma vez só</strong> e reaproveitá-la — senão, cada vez que você salva um
+          arquivo durante o desenvolvimento, uma conexão nova seria criada, até o banco
+          reclamar de excesso.
+        </p>
+      </section>
+
+      <!-- 9 -->
+      <section id="s9">
+        <span class="num">Capítulo 09</span>
+        <h2>Login, senhas e permissões</h2>
+        <p class="sub">Três arquivos fazem todo o trabalho: <code>auth.ts</code>, <code>proxy.ts</code> e as páginas de login.</p>
+
+        <h3>Senhas nunca são guardadas</h3>
+        <p>
+          O que vai para o banco é o <code>passwordHash</code> — a senha passada por uma
+          função de embaralhamento chamada <strong>bcrypt</strong>, que é de mão única.
+          Dá para embaralhar, mas não dá para desembaralhar. Na hora do login, o sistema
+          embaralha o que a pessoa digitou e compara os dois embaralhados. Isso significa
+          que <em>nem você</em> consegue ver a senha de ninguém — e isso é o desejado:
+          se o banco vazar, as senhas continuam protegidas.
+        </p>
+
+        <h3>Os três cargos</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Cargo</th><th>Quem é</th><th>Onde pode entrar</th></tr></thead>
+            <tbody>
+              <tr><td><code>admin</code></td><td>Você</td><td><code>/admin</code> (tudo) e também <code>/team</code></td></tr>
+              <tr><td><code>teamLead</code></td><td>Líder de equipe</td><td>só <code>/team</code></td></tr>
+              <tr><td><code>helper</code></td><td>Ajudante</td><td>só <code>/team</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Em <code>src/auth.ts</code>, a função <code>authorize</code> procura o email
+          primeiro entre os administradores e depois entre os membros da equipe — e
+          devolve o cargo junto. Esse cargo viaja num crachá digital assinado (um
+          <em>token JWT</em>) guardado num cookie do navegador. Assinado quer dizer:
+          ninguém consegue editar o crachá para se promover a admin sem que o servidor perceba.
+        </p>
+
+        <h3>O porteiro</h3>
+        <p>
+          <code>src/proxy.ts</code> roda <strong>antes</strong> de qualquer página de
+          <code>/admin</code> ou <code>/team</code> ser montada. Ele lê o crachá e decide:
+        </p>
+        <ul>
+          <li>sem login tentando entrar no admin → vai para <code>/admin/login</code>;</li>
+          <li>logado, mas não é admin, tentando o admin → vai para <code>/team/login</code>;</li>
+          <li>já logado e indo para a tela de login → é redirecionado para dentro, já que não precisa entrar de novo.</li>
+        </ul>
+
+        <div class="note warn">
+          <span class="tag">Importante</span>
+          <p>
+            O porteiro não é a única proteção. Cada <code>actions.ts</code> confere o login
+            de novo, por conta própria. Isso é intencional: proteção em camadas.
+            Se alguém descobrir como driblar o porteiro, ainda esbarra na segunda tranca.
+          </p>
+        </div>
+
+        <h3>Como sua conta foi criada</h3>
+        <p>
+          Pelo arquivo <code>scripts/create-admin.ts</code>, rodado uma vez pelo comando
+          <code>npm run create-admin</code>. Não existe tela de "criar conta de
+          administradora" no site — de propósito, para que ninguém possa se cadastrar
+          como dona do sistema pela internet.
+        </p>
+      </section>
+
+      <!-- 10 -->
+      <section id="s10">
+        <span class="num">Capítulo 10</span>
+        <h2>O robô que responde SMS</h2>
+        <p class="sub">A parte mais engenhosa do projeto, do primeiro toque até a resposta chegar.</p>
+
+        <p>
+          Um cliente manda "Quanto custa uma faxina completa?" para
+          <strong>+1 (321) 252-5141</strong>. Ninguém está com o celular na mão. Em poucos
+          segundos ele recebe uma resposta correta, com o preço certo. Isto é o que acontece:
+        </p>
+
+        <ul class="flow">
+          <li>
+            <div>
+              <span class="who">Cliente</span>
+              <span class="what">Manda um SMS para o número da empresa.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Twilio</span>
+              <span class="what">Recebe a mensagem e imediatamente avisa o seu site, chamando o endereço <code>/api/webhooks/sms</code>. Isso se chama <strong>webhook</strong>: um aviso automático de um serviço para outro.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Seu servidor · conferência</span>
+              <span class="what">Antes de qualquer coisa, <code>validateRequest()</code> confere a assinatura da Twilio. Sem isso, qualquer pessoa na internet poderia fingir ser a Twilio e fazer seu robô responder — às suas custas.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Seu servidor · registro</span>
+              <span class="what">Acha ou cria o cliente pelo telefone, acha ou abre a conversa dele, e salva a mensagem recebida no banco.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Seu servidor · contexto</span>
+              <span class="what">Monta as instruções da IA (em <code>src/lib/ai.ts</code>): nome da empresa, horário de funcionamento, a lista real de serviços com preços, mais o histórico inteiro daquela conversa.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Claude</span>
+              <span class="what">Escreve a resposta — curta, porque é SMS — usando <em>só</em> os preços da lista. A instrução é explícita: nunca inventar preço, e quando não souber, dizer que a administradora vai confirmar.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Claude · ferramenta</span>
+              <span class="what">Se o cliente já disse qual serviço quer e quando, a IA aciona a ferramenta <code>propose_booking</code>. Ela não confirma nada: cria um agendamento com status <strong>pendente</strong> na sua agenda.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Twilio</span>
+              <span class="what">O servidor manda a resposta de volta por SMS e guarda uma cópia no banco, marcada como enviada pela IA.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <span class="who">Você</span>
+              <span class="what">Abre <code>/admin/conversations</code> e lê tudo o que foi conversado. Em <code>/admin/bookings</code>, os pedidos pendentes esperam você confirmar a data e o horário.</span>
+            </div>
+          </li>
+        </ul>
+
+        <h3>O que é uma "ferramenta" de IA</h3>
+        <p>
+          Um modelo de linguagem só sabe produzir texto. Ele não consegue gravar nada no
+          seu banco. Uma <strong>ferramenta</strong> resolve isso: você descreve para o
+          modelo uma ação disponível (<em>"propose_booking, que recebe nome do serviço e
+          data preferida"</em>). Quando o modelo decide usá-la, ele devolve um pedido
+          estruturado, e o <em>seu</em> código executa a gravação. O controle continua sendo seu —
+          a IA pede, o seu código decide como fazer.
+        </p>
+
+        <div class="note">
+          <span class="tag">Detalhe importante</span>
+          <p>
+            A IA <strong>nunca confirma um agendamento sozinha</strong>. Ela só cria pedidos
+            pendentes. A confirmação de data e horário é sempre um clique seu em
+            <code>/admin/bookings</code>. Foi uma decisão de desenho, não uma limitação técnica.
+          </p>
+        </div>
+
+        <h3>Você pode desligar o robô</h3>
+        <p>
+          Cada conversa tem um campo <code>aiEnabled</code>. Se estiver desligado, a
+          mensagem é salva normalmente, mas nenhuma resposta automática sai — útil quando
+          você quiser assumir uma conversa pessoalmente.
+        </p>
+      </section>
+
+      <!-- 11 -->
+      <section id="s11">
+        <span class="num">Capítulo 11</span>
+        <h2>Senhas, chaves e o arquivo <code>.env.local</code></h2>
+        <p class="sub">O assunto mais importante deste manual, mesmo sendo o mais curto.</p>
+
+        <p>
+          O arquivo <code>.env.local</code>, na raiz do projeto, guarda tudo o que é secreto:
+          o endereço e a senha do MongoDB, as chaves da Twilio, a chave da Anthropic, o
+          segredo que assina os crachás de login. Cada linha é <code>NOME=valor</code>, e o
+          código lê esses valores por <code>process.env.NOME</code>.
+        </p>
+
+        <p>
+          Esses valores ficam <strong>fora</strong> do código por dois motivos: para não
+          irem parar no GitHub junto com os arquivos, e para que o mesmo código possa
+          rodar no seu computador e na Vercel apontando para lugares diferentes.
+        </p>
+
+        <div class="note">
+          <span class="tag">Verificado agora</span>
+          <p>
+            O <code>.gitignore</code> deste projeto contém a linha <code>.env*</code>, e
+            nenhum arquivo de segredo está no histórico do Git. Está correto.
+          </p>
+        </div>
+
+        <div class="note warn">
+          <span class="tag">Cuidado permanente</span>
+          <p>
+            Nunca cole o conteúdo desse arquivo numa conversa, num chat, numa captura de
+            tela ou numa mensagem. Uma chave da Anthropic exposta pode ser usada por
+            estranhos e cobrada de você; o endereço do MongoDB dá acesso a todos os dados
+            dos seus clientes. Se algum desses valores vazar, o conserto é sempre o mesmo:
+            gerar uma chave nova no site do serviço e substituir a antiga.
+          </p>
+        </div>
+
+        <p>
+          Na Vercel, esses mesmos valores são cadastrados no painel do projeto — o
+          <code>.env.local</code> só vale no seu computador.
+        </p>
+      </section>
+
+      <!-- 12 -->
+      <section id="s12">
+        <span class="num">Capítulo 12</span>
+        <h2>Rodar no seu computador e publicar</h2>
+        <p class="sub">Os comandos que existem, e o que cada um provoca.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Comando</th><th>O que faz</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><code>npm install</code></td>
+                <td>Baixa todas as bibliotecas listadas em <code>package.json</code> para <code>node_modules/</code>. Só é preciso depois de clonar o projeto ou de adicionar uma biblioteca nova.</td>
+              </tr>
+              <tr>
+                <td><code>npm run dev</code></td>
+                <td>Liga o site no seu computador, em <code>localhost:3000</code>. Ao salvar um arquivo, a tela se atualiza sozinha. É neste modo que se trabalha.</td>
+              </tr>
+              <tr>
+                <td><code>npm run build</code></td>
+                <td>Monta a versão otimizada, do jeito que vai para o ar. Serve como conferência final: se houver um erro de tipo, ele aparece aqui.</td>
+              </tr>
+              <tr>
+                <td><code>npm run create-admin</code></td>
+                <td>Cria a conta de administradora no banco.</td>
+              </tr>
+              <tr>
+                <td><code>vercel</code> / <code>vercel --prod</code></td>
+                <td>Publica. O primeiro gera um endereço de teste; o segundo coloca no ar de verdade.</td>
+              </tr>
+              <tr>
+                <td><code>git commit</code></td>
+                <td>Tira uma foto do projeto naquele momento, com uma descrição. É o que permite voltar atrás depois.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note warn">
+          <span class="tag">Particularidade deste computador</span>
+          <p>
+            O Node instalado no sistema é a versão 15, antiga demais para este projeto,
+            que precisa da 20 ou maior. Existe um Node 22 instalado à parte, e é por isso
+            que os comandos daqui costumam vir com um prefixo apontando para
+            <code>/opt/homebrew/opt/node@22/bin</code>. Se um comando falhar com uma
+            mensagem sobre versão do Node, é isso.
+          </p>
+        </div>
+
+        <h3>O caminho de uma mudança até o ar</h3>
+        <pre>editar em <b>src/</b>
+   → ver funcionando em <b>localhost:3000</b>   <i>(npm run dev)</i>
+   → conferir que compila                <i>(npm run build)</i>
+   → salvar no histórico                 <i>(git commit)</i>
+   → publicar                            <i>(vercel --prod)</i></pre>
+      </section>
+
+      <!-- 13 -->
+      <section id="s13">
+        <span class="num">Capítulo 13</span>
+        <h2>O que está pronto e o que falta</h2>
+        <p class="sub">Uma leitura honesta do estado atual, feita a partir do código.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Parte</th><th>Estado</th><th>Observação</th></tr></thead>
+            <tbody>
+              <tr><td>Página pública com 3 idiomas</td><td><span class="status">Pronto</span></td><td>Serviços e preços vêm do banco, ao vivo.</td></tr>
+              <tr><td>Login de admin e de equipe</td><td><span class="status">Pronto</span></td><td>Com os três cargos funcionando.</td></tr>
+              <tr><td>Cadastro de serviços</td><td><span class="status">Pronto</span></td><td>Criar, editar, ativar/desativar, excluir.</td></tr>
+              <tr><td>Recebimento e leitura de SMS</td><td><span class="status">Pronto</span></td><td>Com verificação de assinatura da Twilio.</td></tr>
+              <tr><td>Resposta automática por IA</td><td><span class="status">Pronto</span></td><td>Incluindo a criação de agendamentos pendentes.</td></tr>
+              <tr><td>Agenda</td><td><span class="status">Pronto</span></td><td>Pendentes, confirmados e cancelados.</td></tr>
+              <tr><td>Contas da equipe</td><td><span class="status">Pronto</span></td><td>Criar, ativar/desativar, excluir.</td></tr>
+              <tr><td>Painel inicial do admin</td><td><span class="status todo">Vazio</span></td><td>Hoje só tem um texto de boas-vindas. O próprio arquivo diz que ali vão aparecer os próximos agendamentos e as conversas recentes.</td></tr>
+              <tr><td>Área da equipe</td><td><span class="status todo">Vazio</span></td><td>A tela diz "Nenhuma vaga disponível ainda — isso chega na próxima fase".</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          Se você quiser continuar, os dois candidatos naturais são justamente esses
+          últimos: preencher o painel inicial (que já tem todas as funções de leitura
+          prontas em <code>src/lib/</code>) e desenhar o que a equipe deve ver — provavelmente
+          os agendamentos confirmados de cada pessoa.
+        </p>
+      </section>
+
+      <!-- 14 -->
+      <section id="s14">
+        <span class="num">Capítulo 14</span>
+        <h2>Glossário</h2>
+        <p class="sub">Para consultar quando um termo aparecer e você não lembrar.</p>
+
+        <dl class="gloss">
+          <div><dt>Framework</dt><dd>Uma base pronta que já resolve os problemas comuns de um tipo de programa. Aqui, o Next.js.</dd></div>
+          <div><dt>Biblioteca</dt><dd>Código pronto de outra pessoa que você instala e usa. Ex.: bcrypt, Twilio.</dd></div>
+          <div><dt>Componente</dt><dd>Um pedaço de tela reaproveitável, escrito como uma função.</dd></div>
+          <div><dt>JSX</dt><dd>A sintaxe que permite escrever a aparência da tela dentro do código.</dd></div>
+          <div><dt>Rota</dt><dd>Um endereço do site. Neste projeto, cada pasta em <code>src/app/</code> é uma.</dd></div>
+          <div><dt>API</dt><dd>Um endereço que devolve dados, não tela — para outros programas consumirem.</dd></div>
+          <div><dt>Webhook</dt><dd>Um aviso automático que um serviço externo manda para o seu site quando algo acontece.</dd></div>
+          <div><dt>Servidor</dt><dd>O computador remoto que monta as páginas e fala com o banco.</dd></div>
+          <div><dt>Cliente</dt><dd>Neste contexto técnico: o navegador do visitante.</dd></div>
+          <div><dt>Coleção</dt><dd>Uma "gaveta" do MongoDB. Equivale a uma tabela em outros bancos.</dd></div>
+          <div><dt>Documento</dt><dd>Uma ficha dentro de uma coleção. Um serviço, um cliente, uma mensagem.</dd></div>
+          <div><dt>_id</dt><dd>O código único que identifica cada documento.</dd></div>
+          <div><dt>Hash</dt><dd>Senha embaralhada de forma irreversível. É o que se guarda no lugar da senha.</dd></div>
+          <div><dt>Sessão</dt><dd>O estado de "esta pessoa está logada", guardado num cookie assinado.</dd></div>
+          <div><dt>Deploy</dt><dd>Publicar a versão nova do site na internet.</dd></div>
+          <div><dt>Commit</dt><dd>Uma foto do projeto num momento, salva no histórico do Git.</dd></div>
+          <div><dt>Variável de ambiente</dt><dd>Um valor configurado fora do código, geralmente secreto. Vive no <code>.env.local</code>.</dd></div>
+          <div><dt>Tipo</dt><dd>A etiqueta do TypeScript que diz o formato de um dado: texto, número, data.</dd></div>
+          <div><dt>Server Action</dt><dd>Função que roda no servidor e pode ser chamada por um formulário na tela.</dd></div>
+          <div><dt>Cache</dt><dd>Guardar um resultado pronto para reaproveitar e não refazer o trabalho.</dd></div>
+        </dl>
+      </section>
+
+      <footer>
+        <p>
+          Manual gerado a partir da leitura completa do código em <code>/Users/student/jeisi/mysite</code>,
+          no estado do commit <code>e64929f</code>. Se o projeto mudar bastante, vale
+          atualizar este documento.
+        </p>
+      </footer>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>
