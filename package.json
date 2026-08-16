@@ -10,6 +10,7 @@
     "create-admin": "tsx --env-file=.env.local scripts/create-admin.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.117.1",
     "bcryptjs": "^3.0.3",
     "mongodb": "^7.5.0",
     "next": "16.3.1",

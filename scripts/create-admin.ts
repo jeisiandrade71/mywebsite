@@ -4,14 +4,20 @@ import bcrypt from "bcryptjs";
 import { getAdminsCollection } from "../src/lib/admins";
 
 async function main() {
-  const rl = createInterface({ input: stdin, output: stdout });
+  // Modo não-interativo (ex: rodado a partir de outro script/automação):
+  // ADMIN_EMAIL + ADMIN_PASSWORD via variável de ambiente pulam os prompts.
+  let email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  let password = process.env.ADMIN_PASSWORD;
+  let confirm = password;
 
-  const email = (await rl.question("Email do admin: ")).trim().toLowerCase();
-  console.log("Atenção: a senha vai aparecer na tela enquanto você digita.");
-  const password = await rl.question("Senha: ");
-  const confirm = await rl.question("Confirme a senha: ");
-
-  rl.close();
+  if (!email || !password) {
+    const rl = createInterface({ input: stdin, output: stdout });
+    email = (await rl.question("Email do admin: ")).trim().toLowerCase();
+    console.log("Atenção: a senha vai aparecer na tela enquanto você digita.");
+    password = await rl.question("Senha: ");
+    confirm = await rl.question("Confirme a senha: ");
+    rl.close();
+  }
 
   if (!email || !password) {
     console.error("Email e senha são obrigatórios.");

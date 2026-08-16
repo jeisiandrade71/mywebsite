@@ -3,6 +3,10 @@ import { validateRequest } from "twilio";
 import { findOrCreateCustomerByPhone } from "@/lib/customers";
 import { findOrCreateOpenConversation, touchConversation } from "@/lib/conversations";
 import { createMessage } from "@/lib/messages";
+import { generateAiReply } from "@/lib/ai";
+import { createBooking } from "@/lib/bookings";
+import { getServicesCollection } from "@/lib/services";
+import { sendSms } from "@/lib/twilio";
 
 function twiml(xml = "") {
   return new NextResponse(`<?xml version="1.0" encoding="UTF-8"?><Response>${xml}</Response>`, {
@@ -57,8 +61,41 @@ export async function POST(request: Request) {
 
   await touchConversation(conversation._id);
 
-  // A resposta automática por IA entra numa fase seguinte; por enquanto a
-  // mensagem só fica salva pra ser respondida manualmente pelo painel.
+  if (conversation.aiEnabled) {
+    try {
+      const replyText = await generateAiReply(
+        conversation,
+        customer,
+        async ({ serviceName, preferredDate, notes }) => {
+          const services = await getServicesCollection();
+          const matchedService = await services.findOne({
+            name: { $regex: `^${serviceName}$`, $options: "i" },
+          });
+          await createBooking({
+            customerId: customer._id,
+            serviceId: matchedService?._id ?? null,
+            serviceName,
+            start: null,
+            notes: `Preferência do cliente: ${preferredDate}. ${notes}`.trim(),
+          });
+        }
+      );
+
+      const sent = await sendSms(from, replyText);
+
+      await createMessage({
+        conversationId: conversation._id,
+        direction: "outbound",
+        sender: "ai",
+        body: replyText,
+        twilioSid: sent.sid,
+      });
+
+      await touchConversation(conversation._id);
+    } catch (error) {
+      console.error("AI reply failed:", error);
+    }
+  }
 
   return twiml();
 }
