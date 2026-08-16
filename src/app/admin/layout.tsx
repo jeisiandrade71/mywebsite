@@ -29,6 +29,9 @@ export default async function AdminLayout({
           <Link href="/admin/bookings" className="hover:text-black dark:hover:text-white">
             Agenda
           </Link>
+          <Link href="/admin/calendar" className="hover:text-black dark:hover:text-white">
+            Calendário
+          </Link>
           <Link href="/admin/team" className="hover:text-black dark:hover:text-white">
             Equipe
           </Link>
