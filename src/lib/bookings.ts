@@ -43,7 +43,37 @@ export async function listBookings() {
   return bookings.find().sort({ start: 1 }).toArray();
 }
 
+export async function listBookingsWithCustomers() {
+  const client = await clientPromise;
+  const dbName = process.env.MONGODB_DB || "mysite";
+  const db = client.db(dbName);
+
+  return db
+    .collection<BookingDoc>("bookings")
+    .aggregate([
+      { $sort: { start: 1, createdAt: 1 } },
+      {
+        $lookup: {
+          from: "customers",
+          localField: "customerId",
+          foreignField: "_id",
+          as: "customer",
+        },
+      },
+      { $unwind: "$customer" },
+    ])
+    .toArray();
+}
+
 export async function setBookingStatus(id: string, status: BookingStatus) {
   const bookings = await getBookingsCollection();
   await bookings.updateOne({ _id: new ObjectId(id) }, { $set: { status } });
+}
+
+export async function confirmBooking(id: string, start: Date) {
+  const bookings = await getBookingsCollection();
+  await bookings.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: { status: "confirmed", start } }
+  );
 }

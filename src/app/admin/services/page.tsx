@@ -39,7 +39,7 @@ export default async function ServicesPage() {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-zinc-500">Preço (R$)</label>
+          <label className="text-xs text-zinc-500">Preço (US$)</label>
           <input
             name="price"
             type="number"

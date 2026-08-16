@@ -9,9 +9,9 @@ import {
 } from "./actions";
 
 function formatPrice(cents: number) {
-  return (cents / 100).toLocaleString("pt-BR", {
+  return (cents / 100).toLocaleString("en-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   });
 }
 
@@ -54,7 +54,7 @@ export default function ServiceRow({
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-zinc-500">Preço (R$)</label>
+              <label className="text-xs text-zinc-500">Preço (US$)</label>
               <input
                 name="price"
                 type="number"

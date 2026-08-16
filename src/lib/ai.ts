@@ -33,9 +33,9 @@ const PROPOSE_BOOKING_TOOL: Anthropic.Tool = {
 };
 
 function formatPrice(cents: number) {
-  return (cents / 100).toLocaleString("pt-BR", {
+  return (cents / 100).toLocaleString("en-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   });
 }
 
