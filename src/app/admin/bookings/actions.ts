@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { confirmBooking, createBooking, setBookingStatus } from "@/lib/bookings";
+import { assignHelperSlots, confirmBooking, createBooking, setBookingStatus } from "@/lib/bookings";
 import { findOrCreateCustomerByPhone } from "@/lib/customers";
 import { getServicesCollection } from "@/lib/services";
 import { ObjectId } from "mongodb";
@@ -59,6 +59,22 @@ export async function createBookingAction(formData: FormData) {
   });
 
   await confirmBooking(booking._id.toString(), new Date(startValue));
+
+  revalidatePath("/admin/bookings");
+}
+
+export async function assignHelperSlotsAction(id: string, formData: FormData) {
+  await requireSession();
+
+  const teamLeadId = String(formData.get("teamLeadId") || "");
+  const helperSlots = Number(formData.get("helperSlots") || 0);
+  const payValue = String(formData.get("helperPay") || "");
+
+  await assignHelperSlots(id, {
+    teamLeadId: teamLeadId ? new ObjectId(teamLeadId) : null,
+    helperSlots: Number.isFinite(helperSlots) ? Math.max(0, helperSlots) : 0,
+    helperPayCents: payValue ? Math.round(Number(payValue) * 100) : null,
+  });
 
   revalidatePath("/admin/bookings");
 }
